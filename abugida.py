@@ -1,3 +1,4 @@
+import os
 from xml.dom import minidom
 from xml.etree import ElementTree
 
@@ -272,8 +273,46 @@ abugida = Abugida({
         'L 27.249 47.751')
 })
 
-if __name__ == '__main__':
-    to_file(abugida.create_svg(('base', 'h', 'y')), 'svg/d1.svg')
-    to_file(abugida.create_svg(('base', 'h', 'ø')), 'svg/d3.svg')
 
-    # to_file(abugida.create_svg(('base', 'w', 'y2')), 'svg/2.svg')
+def create_all_glyphs():
+    numerals = [
+        '0', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9']
+    consonants = [
+        'p', 'b', 'm', 'f', 'v',
+        't', 'd', 'n', 's', 'z',
+        'k', 'g', 'x', 'gh', "'",
+        'h', 'r', 'l', 'j', 'w']
+    vowels = [
+        'i', 'u', 'o', 'y', 'ø']
+
+    subdir = 'abugida_svg'
+    if not os.path.isdir(subdir):
+        os.mkdir(subdir)
+    i = 0
+    for numeral in numerals:
+        parts = ('0',)
+        if numeral != '0':
+            parts = parts + (numeral,)
+        to_file(
+            abugida.create_svg(parts),
+            os.path.join(subdir, f'{i}_{numeral}.svg'))
+        i += 1
+    to_file(
+        abugida.create_svg(('null',), w='18.75'),
+        os.path.join(subdir, f'{i}_null.svg'))
+    i += 1
+    for consonant in consonants:
+        to_file(
+            abugida.create_svg(('base', consonant)),
+            os.path.join(subdir, f'{i}_{consonant}e.svg'))
+        i += 1
+        for vowel in vowels:
+            to_file(
+                abugida.create_svg(('base', consonant, vowel)),
+                os.path.join(subdir, f'{i}_{consonant}{vowel}.svg'))
+            i += 1
+
+
+if __name__ == '__main__':
+    create_all_glyphs()
