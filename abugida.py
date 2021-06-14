@@ -7,11 +7,11 @@ class Abugida:
     def __init__(self, letters):
         self.letters = letters
 
-    def create_svg(self, letters, w='75', h='75'):
+    def create_svg(self, letters, min_x='0', min_y='0', w='75', h='75'):
         svg = ElementTree.Element(
             'svg',
             attrib={
-                'viewBox': f'0 0 {w} {h}',
+                'viewBox': f'{min_x} {min_y} {w} {h}',
                 'xmlns': 'http://www.w3.org/2000/svg'})
         for letter in letters:
             svg.insert(1, self.letters[letter].create_element())
@@ -312,6 +312,11 @@ def create_all_glyphs():
                 abugida.create_svg(('base', consonant, vowel)),
                 os.path.join(subdir, f'{i}_{consonant}{vowel}.svg'))
             i += 1
+    for vowel in vowels:
+        to_file(
+            abugida.create_svg((vowel,), min_x='55', w='20'),
+            os.path.join(subdir, f'{i}_{vowel}.svg'))
+        i += 1
 
 
 if __name__ == '__main__':
