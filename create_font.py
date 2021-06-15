@@ -10,7 +10,8 @@ new_font.ascent = 1000
 new_font.descent = 0
 new_font.encoding = 'UnicodeFull'
 
-letters = []
+vowels = ['E', 'I', 'U', 'O', 'Y', 'Ø', 'A']
+letters = ['conlangSPACER']
 new_font.addLookup(
     'Composition Lookup',
     'gsub_ligature',
@@ -46,15 +47,11 @@ for i, file, char_name in zip(range(len(files)), files, char_names):
         glyph = new_font.createChar(8195, glyph_name)
     elif '.' in char_name:
         glyph = new_font.createChar(-1, glyph_name)
-        # if not char_name.endswith(('.medial', '.final')):
-        #     consonant, vowel = char_name.split('.')
-        #     glyph.addPosSub(
-        #         'Compositions', (f'conlang{consonant}', f'conlang{vowel}'))
     else:
         glyph = new_font.createChar(code_point, glyph_name)
         code_point += 1
 
-    if not char_name.isnumeric() and not char_name == 'SPACE':
+    if not char_name.isnumeric() and char_name not in ['SPACE', 'SPACER']:
         letters.append(glyph_name)
         if not char_name.endswith(('.medial', '.final')):
             if char_name + '.medial' in char_names:
@@ -62,11 +59,14 @@ for i, file, char_name in zip(range(len(files)), files, char_names):
             if char_name + '.final' in char_names:
                 glyph.addPosSub('Final Forms', glyph_name + '.final')
 
-    for vowel in ['E', 'I', 'U', 'O', 'Y', 'Ø']:
-        if vowel in char_name:
-            glyph.addPosSub(
-                'Compositions',
-                (glyph_name.replace('.' + vowel, ''), f'conlang{vowel}'))
+        if char_name not in vowels:
+            for vowel in vowels:
+                if vowel in char_name:
+                    glyph.addPosSub(
+                        'Compositions',
+                        (
+                            glyph_name.replace('.' + vowel, ''),
+                            f'conlang{vowel}'))
 
     glyph.importOutlines(os.path.join(svg_path, file))
     glyph.left_side_bearing = 0
@@ -104,7 +104,7 @@ new_font.addExtrema()
 new_font.round()
 
 font_filename = 'testfont'
-new_font.fontname = "testfont"
+new_font.fontname = 'testfont'
 new_font.save(os.path.join(path, font_filename + '.sfd'))
 new_font.generate(os.path.join(path, font_filename + '.ttf'))
 new_font.generate(os.path.join(path, font_filename + '.otf'))

@@ -188,26 +188,44 @@ abjad = {
         medial_bar=True, final_bar=True),
     'e': Path(
         Path.M(56.75, 18.25),
-        Path.L(73.25, 1.75)),
+        Path.L(73.25, 1.75),
+        Path.M(55, 72.5),
+        Path.H(75)),
     'i': Path(
         Path.M(57.5, 0),
         Path.V(17.5),
+        Path.H(75),
+        Path.M(55, 72.5),
         Path.H(75)),
     'u': Path(
         Path.M(55, 2.5),
-        Path.A(17.5, 17.5, 0, 0, 1, 72.5, 20)),
+        Path.A(17.5, 17.5, 0, 0, 1, 72.5, 20),
+        Path.M(55, 72.5),
+        Path.H(75)),
     'o': Path(
         Path.M(56.75, 18.25),
         Path.L(73.25, 1.75),
         Path.M(56.75, 1.75),
-        Path.L(73.25, 18.25)),
+        Path.L(73.25, 18.25),
+        Path.M(55, 72.5),
+        Path.H(75)),
     'y': Group(
         Circle('58.5', '3.5', '3.5'),
-        Circle('71.5', '16.5', '3.5')),
+        Circle('71.5', '16.5', '3.5'),
+        Path(
+            Path.M(55, 72.5),
+            Path.H(75))),
     'ø': Path(
         Path.M(57.5, 10),
         Path.A(7.5, 7.5, 0, 0, 0, 72.5, 10),
-        Path.A(7.5, 7.5, 0, 0, 0, 57.5, 10)),
+        Path.A(7.5, 7.5, 0, 0, 0, 57.5, 10),
+        Path.M(55, 72.5),
+        Path.H(75)),
+    'a': Path(
+        Path.M(56.75, 1.75),
+        Path.L(73.25, 18.25),
+        Path.M(55, 72.5),
+        Path.H(75)),
     '0': Path(
         Path.M(37.5, 2.5),
         Path.H(17.5),
@@ -290,7 +308,7 @@ def create_all_glyphs():
         'k', 'g', 'x', 'gh', "'",
         'h', 'r', 'l', 'j', 'w']
     vowels = [
-        'e', 'i', 'u', 'o', 'y', 'ø']
+        'e', 'i', 'u', 'o', 'y', 'ø', 'a']
 
     subdir = 'abjad_svg'
     if not os.path.isdir(subdir):
@@ -338,6 +356,9 @@ def create_all_glyphs():
             create_svg(abjad[vowel], min_x='55', w='20'),
             os.path.join(subdir, f'{i}_{vowel.upper()}.svg'))
         i += 1
+    to_file(
+        create_svg(abjad['base_medial']),
+        os.path.join(subdir, f'{i}_SPACER.svg'))
 
 
 if __name__ == '__main__':
