@@ -1,4 +1,3 @@
-import copy
 import os
 from xml.dom import minidom
 from xml.etree import ElementTree
@@ -32,15 +31,11 @@ def create_medial_svg(consonant, *vowel):
 
 def create_final_svg(consonant):
     if consonant.final_bar:
-        new_shape = copy.deepcopy(consonant.shape)
-        # TODO not removing overlap properly when loading,
-        #  flip coords without transform
         try:
             x, y = consonant.final_shift
-            new_shape.attrib.update({'transform': f'translate({x} {y})'})
+            new_shape = consonant.shape.translate(x, y)
         except TypeError:
-            new_shape.attrib.update(
-                {'transform': 'scale(-1 1) translate(-75 0)'})
+            new_shape = consonant.shape.flipped_horizontal(75/2)
         return create_svg(abjad['base_final'], new_shape)
     return create_medial_svg(consonant)
 

@@ -1,3 +1,4 @@
+import copy
 from xml.etree import ElementTree
 
 
@@ -66,6 +67,49 @@ class Path:
                 'd': ' '.join([
                     command.to_string() for command in self.commands]),
                 **self.attrib})
+
+    def flipped_horizontal(self, across):
+        """
+        Return a copy of this Path flipped horizontally across the point
+        `across`.
+
+        :param across: A numeric x value
+        :return: The flipped Path
+        """
+
+        new_path = copy.deepcopy(self)
+        for command in new_path.commands:
+            try:
+                command.x = (2 * across) - command.x
+            except AttributeError:
+                pass
+            try:
+                command.sweep_flag = 1 - command.sweep_flag
+            except AttributeError:
+                pass
+        return new_path
+
+    def translate(self, x, y):
+        """
+        Return a copy of this Path with its `x` and `y` values
+        translated by `x` and `y` respectively.
+
+        :param x: A numeric x value
+        :param y: A numeric y value
+        :return: The moved Path
+        """
+
+        new_path = copy.deepcopy(self)
+        for command in new_path.commands:
+            try:
+                command.x += x
+            except AttributeError:
+                pass
+            try:
+                command.y += y
+            except AttributeError:
+                pass
+        return new_path
 
 
 class Circle:

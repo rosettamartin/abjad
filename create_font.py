@@ -107,3 +107,4 @@ font_filename = 'testfont'
 new_font.fontname = "testfont"
 new_font.save(os.path.join(path, font_filename + '.sfd'))
 new_font.generate(os.path.join(path, font_filename + '.ttf'))
+new_font.generate(os.path.join(path, font_filename + '.otf'))
