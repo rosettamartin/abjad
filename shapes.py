@@ -2,8 +2,57 @@ from xml.etree import ElementTree
 
 
 class Path:
-    def __init__(self, d, **attrib):
-        self.d = d
+    class M:
+        def __init__(self, x, y):
+            self.x, self.y = x, y
+
+        def to_string(self):
+            return f'M {self.x} {self.y}'
+
+    class L:
+        def __init__(self, x, y):
+            self.x, self.y = x, y
+
+        def to_string(self):
+            return f'L {self.x} {self.y}'
+
+    class H:
+        def __init__(self, x):
+            self.x = x
+
+        def to_string(self):
+            return f'H {self.x}'
+
+    class V:
+        def __init__(self, y):
+            self.y = y
+
+        def to_string(self):
+            return f'V {self.y}'
+
+    class A:
+        def __init__(self,
+                     rx, ry, x_axis_rotation, large_arc_flag, sweep_flag,
+                     x, y):
+            self.rx, self.ry, self.x, self.y = rx, ry, x, y
+            self.x_axis_rotation = x_axis_rotation
+            self.large_arc_flag = large_arc_flag
+            self.sweep_flag = sweep_flag
+
+        def to_string(self):
+            return (
+                f'A {self.rx} {self.ry} '
+                f'{self.x_axis_rotation} {self.large_arc_flag} '
+                f'{self.sweep_flag} '
+                f'{self.x} {self.y}')
+
+    class Z:
+        @staticmethod
+        def to_string():
+            return 'Z'
+
+    def __init__(self, *commands, **attrib):
+        self.commands = commands
         self.attrib = {
             'stroke': 'black',
             'fill': 'none',
@@ -14,7 +63,8 @@ class Path:
         return ElementTree.Element(
             'path',
             attrib={
-                'd': self.d,
+                'd': ' '.join([
+                    command.to_string() for command in self.commands]),
                 **self.attrib})
 
 
